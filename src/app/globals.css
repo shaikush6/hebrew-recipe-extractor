@@ -1,0 +1,297 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --cream: #FDF6E9;
+    --cream-dark: #F5EBD8;
+    --terracotta: #C45C26;
+    --olive: #4A5D23;
+    --charcoal: #2D2A26;
+    --honey: #E8A838;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-charcoal font-body antialiased;
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+      linear-gradient(135deg, #FDF6E9 0%, #F5EBD8 100%);
+    min-height: 100vh;
+  }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+  }
+
+  [dir="rtl"] .font-display {
+    font-family: 'Heebo', 'Assistant', serif;
+  }
+}
+
+@layer components {
+  /* Paper card effect */
+  .paper-card {
+    @apply bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg;
+    box-shadow:
+      0 4px 6px -1px rgba(45, 42, 38, 0.08),
+      0 10px 15px -3px rgba(45, 42, 38, 0.06),
+      0 20px 25px -5px rgba(45, 42, 38, 0.04);
+  }
+
+  /* Handwritten underline effect */
+  .handwritten-underline {
+    position: relative;
+  }
+
+  .handwritten-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--terracotta), var(--terracotta), transparent);
+    border-radius: 2px;
+    transform: rotate(-0.5deg);
+  }
+
+  /* Ingredient checkbox style */
+  .ingredient-checkbox {
+    @apply w-5 h-5 rounded-full border-2 border-olive-300 flex items-center justify-center transition-all duration-200;
+  }
+
+  .ingredient-checkbox:hover {
+    @apply border-olive-500 bg-olive-50;
+  }
+
+  .ingredient-checkbox.checked {
+    @apply bg-olive-500 border-olive-500;
+  }
+
+  /* Step number badge */
+  .step-number {
+    @apply w-10 h-10 rounded-full bg-terracotta-500 text-white font-display font-bold flex items-center justify-center text-lg shadow-md;
+  }
+
+  /* Shimmer loading effect */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(245, 235, 216, 0.4) 0%,
+      rgba(253, 246, 233, 0.8) 50%,
+      rgba(245, 235, 216, 0.4) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Steam animation for loading */
+  .steam {
+    @apply absolute opacity-0;
+    animation: steam 2s ease-out infinite;
+  }
+
+  .steam:nth-child(2) {
+    animation-delay: 0.5s;
+  }
+
+  .steam:nth-child(3) {
+    animation-delay: 1s;
+  }
+
+  /* Decorative corner flourish */
+  .flourish {
+    @apply text-terracotta-300;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200;
+  }
+
+  .badge-terracotta {
+    @apply bg-terracotta-100 text-terracotta-700;
+  }
+
+  .badge-olive {
+    @apply bg-olive-100 text-olive-700;
+  }
+
+  .badge-honey {
+    @apply bg-honey-100 text-honey-700;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-cream-dark rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-terracotta-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-terracotta-400;
+  }
+}
+
+@layer utilities {
+  /* Stagger animation delays */
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+  .animation-delay-600 { animation-delay: 600ms; }
+  .animation-delay-700 { animation-delay: 700ms; }
+  .animation-delay-800 { animation-delay: 800ms; }
+
+  /* Text balance for better typography */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-terracotta-600 to-terracotta-400;
+  }
+}
+
+/* Cooking Mode Animations */
+@keyframes confetti {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes step-complete {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(74, 93, 35, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 20px rgba(74, 93, 35, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(74, 93, 35, 0);
+  }
+}
+
+@keyframes achievement-unlock {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(0.95) rotate(-5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes progress-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-confetti {
+  animation: confetti 4s ease-out forwards;
+}
+
+.animate-step-complete {
+  animation: step-complete 0.5s ease-out;
+}
+
+.animate-achievement {
+  animation: achievement-unlock 0.6s ease-out forwards;
+}
+
+.animate-progress-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(196, 92, 38, 0.8) 0%,
+    rgba(232, 168, 56, 0.8) 50%,
+    rgba(196, 92, 38, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: progress-shimmer 2s infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.5s ease-out forwards;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
