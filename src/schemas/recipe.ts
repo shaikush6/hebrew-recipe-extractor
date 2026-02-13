@@ -152,7 +152,7 @@ export const RecipeSchema = z.object({
   tips: z.array(z.string()).default([]).describe('Optional cooking tips or notes'),
   meta: RecipeMetaSchema,
   nutrition: NutritionSchema.optional(),
-  extractionMethod: z.enum(['json-ld', 'llm', 'hybrid']).describe('How the recipe was extracted'),
+  extractionMethod: z.enum(['json-ld', 'llm', 'hybrid', 'image']).describe('How the recipe was extracted'),
   confidence: z.number().min(0).max(1).describe('Extraction confidence score (0-1)'),
   kashrut: KashrutSchema.optional().describe('Kashrut status: parve, dairy, meat, not_kosher, or unknown'),
   rawText: z.string().optional().describe('Raw text content used for extraction'),

@@ -13,6 +13,7 @@ import {
   Search,
   X,
   Zap,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -20,7 +21,7 @@ import { Recipe, HistoryItem } from '@/types/recipe';
 import { formatRelativeTime } from '@/lib/format';
 
 import LoadingAnimation from '@/components/ui/LoadingAnimation';
-import UrlInput from '@/components/recipe/UrlInput';
+import RecipeInput, { type InputTab } from '@/components/recipe/RecipeInput';
 import RecipeDisplay from '@/components/recipe/RecipeDisplay';
 import { UserMenu } from '@/components/auth/UserMenu';
 
@@ -176,9 +177,14 @@ function HistorySidebar({
                             "inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full mt-1",
                             record.extraction_method === 'json-ld' ? "bg-olive-100 text-olive-700" :
                             record.extraction_method === 'llm' ? "bg-terracotta-100 text-terracotta-700" :
+                            record.extraction_method === 'image' ? "bg-purple-100 text-purple-700" :
                             "bg-honey-100 text-honey-700"
                           )}>
-                            <Zap className="w-2.5 h-2.5" />
+                            {record.extraction_method === 'image' ? (
+                              <ImageIcon className="w-2.5 h-2.5" />
+                            ) : (
+                              <Zap className="w-2.5 h-2.5" />
+                            )}
                             {record.extraction_method.toUpperCase()}
                           </span>
                         )}
@@ -251,6 +257,9 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Input tab state
+  const [inputTab, setInputTab] = useState<InputTab>('url');
 
   // History state
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -361,6 +370,38 @@ export default function HomePage() {
     }
   };
 
+  // Handle image extraction
+  const handleImageExtract = async (file: File) => {
+    setIsLoading(true);
+    setError(null);
+    setRecipe(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await fetch('/api/extract-image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to extract recipe from image');
+      }
+
+      setRecipe(data.recipe);
+
+      // Refresh history to show the new recipe
+      fetchHistory();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       {/* Auth Header - Fixed top right */}
@@ -397,12 +438,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* URL Input */}
-          <UrlInput
-            value={url}
-            onChange={setUrl}
-            onSubmit={handleExtract}
+          {/* Recipe Input (URL or Image) */}
+          <RecipeInput
+            urlValue={url}
+            onUrlChange={setUrl}
+            onUrlSubmit={handleExtract}
+            onImageUpload={handleImageExtract}
             isLoading={isLoading}
+            activeTab={inputTab}
+            onTabChange={setInputTab}
           />
 
           {/* Loading state */}
@@ -428,7 +472,10 @@ export default function HomePage() {
                 No recipe yet
               </h3>
               <p className="text-charcoal/50">
-                Paste a recipe URL above to get started
+                Paste a recipe URL or upload an image to get started
+              </p>
+              <p className="text-charcoal/40 text-sm mt-1">
+                הדביקו קישור למתכון או העלו תמונה
               </p>
               {history.length > 0 && (
                 <button

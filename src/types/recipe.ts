@@ -28,7 +28,7 @@ export interface Ingredient {
 
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'unknown';
 export type Language = 'he' | 'en' | 'mixed';
-export type ExtractionMethod = 'json-ld' | 'llm' | 'hybrid';
+export type ExtractionMethod = 'json-ld' | 'llm' | 'hybrid' | 'image';
 export type Kashrut = 'parve' | 'dairy' | 'meat' | 'not_kosher' | 'unknown';
 
 export interface RecipeMeta {
